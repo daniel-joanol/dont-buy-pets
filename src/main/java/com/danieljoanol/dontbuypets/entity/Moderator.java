@@ -18,7 +18,7 @@ import lombok.Setter;
 @AllArgsConstructor
 @Entity
 @Table(name = "moderator")
-public class Moderator {
+public class Moderator implements GenericEntity<Moderator> {
     
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)

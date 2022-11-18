@@ -17,7 +17,7 @@ import lombok.Setter;
 @AllArgsConstructor
 @Entity
 @Table(name = "region")
-public class Region {
+public class Region implements GenericEntity<Region> {
     
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)

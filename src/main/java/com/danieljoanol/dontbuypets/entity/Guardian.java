@@ -23,7 +23,7 @@ import lombok.Setter;
 @Builder
 @Entity
 @Table(name = "guardian")
-public class Guardian {
+public class Guardian implements GenericEntity<Guardian> {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)

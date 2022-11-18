@@ -24,7 +24,7 @@ import lombok.Setter;
 @Entity
 @Builder
 @Table(name = "pet")
-public class Pet {
+public class Pet implements GenericEntity<Pet> {
     
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
