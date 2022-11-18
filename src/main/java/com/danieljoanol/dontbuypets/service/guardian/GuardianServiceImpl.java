@@ -3,6 +3,8 @@ package com.danieljoanol.dontbuypets.service.guardian;
 import java.io.IOException;
 import java.util.List;
 
+import javax.persistence.EntityNotFoundException;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
@@ -41,8 +43,8 @@ public class GuardianServiceImpl implements GuardianService {
 
     @Override
     public Guardian getById(Long id) {
-        //TODO: create a handler controller
-        return guardianRepository.findById(id).orElseThrow();
+        return guardianRepository.findById(id).
+                orElseThrow(() -> new EntityNotFoundException("Id " + id + " not found"));
     }
 
     @Override
@@ -53,12 +55,12 @@ public class GuardianServiceImpl implements GuardianService {
     @Override
     public String addImage(Long id, MultipartFile image) 
             throws EmptyImageException, InvalidImageFormatException, IOException {
-        Guardian guardian = guardianRepository.findById(id).orElseThrow();
+        Guardian guardian = guardianRepository.findById(id)
+                .orElseThrow(() -> new EntityNotFoundException("Id " + id + " not found"));
         String URL = cloudinaryService.uploadImage(image);
         guardian.setImage(URL);
         guardian = guardianRepository.save(guardian);
         return guardian.getImage();
-        
     }
     
 }

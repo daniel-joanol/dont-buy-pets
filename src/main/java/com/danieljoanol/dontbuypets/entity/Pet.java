@@ -32,7 +32,7 @@ public class Pet {
     private String name;
     private Long guardianId;
     private AnimalSpecies species;
-    private List<String> photoUrls = new ArrayList<>();
+    private List<String> images = new ArrayList<>();
     private String description;
 
 }
