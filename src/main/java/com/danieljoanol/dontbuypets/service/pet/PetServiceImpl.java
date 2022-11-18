@@ -15,41 +15,24 @@ import com.danieljoanol.dontbuypets.exception.EmptyImageException;
 import com.danieljoanol.dontbuypets.exception.InvalidImageFormatException;
 import com.danieljoanol.dontbuypets.repository.PetRepository;
 import com.danieljoanol.dontbuypets.service.cloud.CloudinaryService;
+import com.danieljoanol.dontbuypets.service.generic.GenericServiceImpl;
 
 @Service
-public class PetServiceImpl implements PetService {
+public class PetServiceImpl extends GenericServiceImpl<Pet> implements PetService {
 
-    @Autowired
-    private PetRepository petRepository;
+    private final PetRepository petRepository;
 
     @Autowired
     private CloudinaryService cloudinaryService;
 
+    public PetServiceImpl(PetRepository petRepository) {
+        super(petRepository);
+        this.petRepository = petRepository;
+    }
+
     @Override
     public Pet create(Pet pet) {
         pet.setId(null);
-        return petRepository.save(pet);
-    }
-
-    @Override
-    public void delete(Long id) {
-        petRepository.deleteById(id);
-        
-    }
-
-    @Override
-    public List<Pet> getAll() {
-        return petRepository.findAll();
-    }
-
-    @Override
-    public Pet getById(Long id) {
-        return petRepository.findById(id)
-                .orElseThrow(() -> new EntityNotFoundException("Id " + id + " not found"));
-    }
-
-    @Override
-    public Pet update(Pet pet) {
         return petRepository.save(pet);
     }
 

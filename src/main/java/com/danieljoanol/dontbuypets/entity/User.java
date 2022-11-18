@@ -7,6 +7,8 @@ import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.Table;
 
+import com.danieljoanol.dontbuypets.enumarator.Roles;
+
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -18,12 +20,13 @@ import lombok.Setter;
 @AllArgsConstructor
 @Entity
 @Table(name = "moderator")
-public class Moderator implements GenericEntity<Moderator> {
+public class User implements GenericEntity<User> {
     
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
     private String name;
+    private Roles role;
 
     @Column(unique = true)
     private String username;

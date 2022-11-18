@@ -1,6 +1,7 @@
 package com.danieljoanol.dontbuypets.dto;
 
-import com.danieljoanol.dontbuypets.entity.Moderator;
+import com.danieljoanol.dontbuypets.entity.User;
+import com.danieljoanol.dontbuypets.enumarator.Roles;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonInclude.Include;
 
@@ -14,27 +15,30 @@ import lombok.Setter;
 @Setter
 @Getter
 @JsonInclude(Include.NON_NULL)
-public class ModeratorDTO extends GenericDTO<Moderator> {
+public class UserDTO extends GenericDTO<User> {
     
     private Long id;
     private String name;
     private String username;
     private String email;
+    private Roles role;
 
-    public ModeratorDTO(Moderator entity) {
+    public UserDTO(User entity) {
         this.id = entity.getId();
         this.name = entity.getName();
         this.username = entity.getUsername();
         this.email = entity.getEmail();
+        this.role = entity.getRole();
     }
 
     @Override
-    public Moderator toEntity() {
-        Moderator entity = new Moderator();
+    public User toEntity() {
+        User entity = new User();
         entity.setId(this.id);
         entity.setName(this.name);
         entity.setUsername(this.username);
         entity.setEmail(this.email);
+        entity.setRole(this.role);
 
         return entity;
     }

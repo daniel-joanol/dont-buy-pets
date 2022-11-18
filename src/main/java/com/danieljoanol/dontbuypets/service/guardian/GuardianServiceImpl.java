@@ -14,41 +14,24 @@ import com.danieljoanol.dontbuypets.exception.EmptyImageException;
 import com.danieljoanol.dontbuypets.exception.InvalidImageFormatException;
 import com.danieljoanol.dontbuypets.repository.GuardianRepository;
 import com.danieljoanol.dontbuypets.service.cloud.CloudinaryService;
+import com.danieljoanol.dontbuypets.service.generic.GenericServiceImpl;
 
 @Service
-public class GuardianServiceImpl implements GuardianService {
+public class GuardianServiceImpl extends GenericServiceImpl<Guardian> implements GuardianService {
 
-    @Autowired
-    private GuardianRepository guardianRepository;
+    private final GuardianRepository guardianRepository;
 
     @Autowired
     private CloudinaryService cloudinaryService;
 
+    public GuardianServiceImpl(GuardianRepository guardianRepository) {
+        super(guardianRepository);
+        this.guardianRepository = guardianRepository;
+    }
+
     @Override
     public Guardian create(Guardian guardian) {
         guardian.setId(null);
-        return guardianRepository.save(guardian);
-    }
-
-    @Override
-    public void delete(Long id) {
-        guardianRepository.deleteById(id);
-        
-    }
-
-    @Override
-    public List<Guardian> getAll() {
-        return guardianRepository.findAll();
-    }
-
-    @Override
-    public Guardian getById(Long id) {
-        return guardianRepository.findById(id).
-                orElseThrow(() -> new EntityNotFoundException("Id " + id + " not found"));
-    }
-
-    @Override
-    public Guardian update(Guardian guardian) {
         return guardianRepository.save(guardian);
     }
     

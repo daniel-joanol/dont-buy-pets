@@ -8,18 +8,9 @@ import org.springframework.web.multipart.MultipartFile;
 import com.danieljoanol.dontbuypets.entity.Pet;
 import com.danieljoanol.dontbuypets.exception.EmptyImageException;
 import com.danieljoanol.dontbuypets.exception.InvalidImageFormatException;
+import com.danieljoanol.dontbuypets.service.generic.GenericService;
 
-public interface PetService {
-    
-    List<Pet> getAll();
-
-    Pet getById(Long id);
-
-    Pet create(Pet pet);
-
-    Pet update(Pet pet);
-
-    void delete(Long id);
+public interface PetService extends GenericService<Pet> {
 
     String addImage(Long id, MultipartFile image)
             throws EmptyImageException, InvalidImageFormatException, IOException;
