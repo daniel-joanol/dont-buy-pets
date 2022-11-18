@@ -27,6 +27,7 @@ public class User implements GenericEntity<User> {
     private Long id;
     private String name;
     private Roles role;
+    private String image;
 
     @Column(unique = true)
     private String username;
