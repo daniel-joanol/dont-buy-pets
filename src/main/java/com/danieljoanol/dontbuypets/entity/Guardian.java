@@ -35,6 +35,6 @@ public class Guardian {
     @Column(unique = true)
     private String email;
     private String website;
-    private String photoUrl;
+    private String image;
 
 }

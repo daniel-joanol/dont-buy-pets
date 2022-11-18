@@ -7,5 +7,5 @@ import com.danieljoanol.dontbuypets.entity.Moderator;
 
 @Repository
 public interface ModeratorRepository extends JpaRepository<Moderator, Long> {
-    
+    //TODO: implement pagination on repositories
 }

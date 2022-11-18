@@ -37,6 +37,13 @@
 			<version>3.0.0</version>
 		</dependency>
 
+		<!-- Cloudinary - to save images on cloud -->
+		<dependency>
+			<groupId>com.cloudinary</groupId>
+			<artifactId>cloudinary-http44</artifactId>
+			<version>1.33.0</version>
+		</dependency>
+
 		<dependency>
 			<groupId>org.postgresql</groupId>
 			<artifactId>postgresql</artifactId>
