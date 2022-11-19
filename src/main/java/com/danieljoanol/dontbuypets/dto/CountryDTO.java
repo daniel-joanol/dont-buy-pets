@@ -17,10 +17,12 @@ public class CountryDTO extends GenericDTO<Country> {
 
     private Long id;
     private String name;
+    private String ISO;
 
     public CountryDTO(Country entity) {
         this.id = entity.getId();
         this.name = entity.getName();
+        this.ISO = entity.getISO();
     }
 
     @Override
@@ -28,6 +30,7 @@ public class CountryDTO extends GenericDTO<Country> {
         Country entity = new Country();
         entity.setId(this.id);
         entity.setName(this.name);
+        entity.setISO(this.ISO);
 
         return entity;
     }
