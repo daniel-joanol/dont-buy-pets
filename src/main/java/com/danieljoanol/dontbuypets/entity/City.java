@@ -24,5 +24,7 @@ public class City implements GenericEntity<City> {
     private Long id;
     private String name;
     private Long regionId;
+    private Double latitud;
+    private Double longitud;
 
 }

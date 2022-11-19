@@ -19,11 +19,15 @@ public class CityDTO extends GenericDTO<City> {
     private Long id;
     private String name;
     private Long regionId;
+    private Double latitud;
+    private Double longitud;
 
     public CityDTO(City entity) {
         this.id = entity.getId();
         this.name = entity.getName();
         this.regionId = entity.getRegionId();
+        this.latitud = entity.getLatitud();
+        this.longitud = entity.getLongitud();
     }
 
     @Override
@@ -32,6 +36,8 @@ public class CityDTO extends GenericDTO<City> {
         entity.setId(this.id);
         entity.setName(this.name);
         entity.setRegionId(this.regionId);
+        entity.setLatitud(this.latitud);
+        entity.setLongitud(this.longitud);
 
         return entity;
     }
