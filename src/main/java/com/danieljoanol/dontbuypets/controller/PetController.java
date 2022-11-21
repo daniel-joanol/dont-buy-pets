@@ -19,6 +19,7 @@ import com.danieljoanol.dontbuypets.exception.EmptyImageException;
 import com.danieljoanol.dontbuypets.exception.InvalidImageFormatException;
 import com.danieljoanol.dontbuypets.repository.PetRepository;
 import com.danieljoanol.dontbuypets.service.pet.PetService;
+import com.danieljoanol.dontbuypets.controller.util.URL;
 
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;

@@ -25,6 +25,7 @@ public class GuardianDTO extends GenericDTO<Guardian> {
     private String email;
     private String website;
     private String image;
+    private String address;
 
     public GuardianDTO(Guardian entity) {
         this.id = entity.getId();
@@ -34,6 +35,7 @@ public class GuardianDTO extends GenericDTO<Guardian> {
         this.email = entity.getEmail();
         this.website = entity.getWebsite();
         this.image = entity.getImage();
+        this.address = entity.getAddress();
     }
 
     @Override
@@ -46,6 +48,7 @@ public class GuardianDTO extends GenericDTO<Guardian> {
         entity.setEmail(this.email);
         entity.setWebsite(this.website);
         entity.setImage(this.image);
+        entity.setAddress(this.address);
         
         return entity;
     }

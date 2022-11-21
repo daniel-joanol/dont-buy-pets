@@ -18,6 +18,7 @@ import com.danieljoanol.dontbuypets.exception.EmptyImageException;
 import com.danieljoanol.dontbuypets.exception.InvalidImageFormatException;
 import com.danieljoanol.dontbuypets.repository.GuardianRepository;
 import com.danieljoanol.dontbuypets.service.guardian.GuardianService;
+import com.danieljoanol.dontbuypets.controller.util.URL;
 
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;

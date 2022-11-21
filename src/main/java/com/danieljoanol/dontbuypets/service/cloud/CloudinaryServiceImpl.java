@@ -58,5 +58,3 @@ public class CloudinaryServiceImpl implements CloudinaryService {
         return response.get("secure_url").toString();
     }
 }
-
-//TODO: add sparkpost (email)

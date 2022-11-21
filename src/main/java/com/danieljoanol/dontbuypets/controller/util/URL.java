@@ -1,4 +1,4 @@
-package com.danieljoanol.dontbuypets.controller;
+package com.danieljoanol.dontbuypets.controller.util;
 
 public class URL {
     

@@ -13,8 +13,9 @@
 	<version>0.0.1-SNAPSHOT</version>
 	<name>dontbuypets</name>
 	<description>A portal to help adopters find their new pets</description>
+	<url>http://maven.apache.org</url>
 	<properties>
-		<java.version>17</java.version>
+		<java.version>11</java.version>
 	</properties>
 	<dependencies>
 		<dependency>
@@ -42,6 +43,13 @@
 			<groupId>com.cloudinary</groupId>
 			<artifactId>cloudinary-http44</artifactId>
 			<version>1.33.0</version>
+		</dependency>
+
+		<!-- Sparkpost - to send emails -->
+		<dependency>
+			<groupId>com.sparkpost</groupId>
+			<artifactId>sparkpost-lib</artifactId>
+			<version>0.27</version>
 		</dependency>
 
 		<dependency>
