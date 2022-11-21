@@ -21,7 +21,7 @@ import lombok.Setter;
 @NoArgsConstructor
 @AllArgsConstructor
 @Entity
-@Table(name = "moderator")
+@Table(name = "user")
 public class User implements GenericEntity<User> {
     
     @Id
@@ -31,6 +31,7 @@ public class User implements GenericEntity<User> {
     private Roles role;
     private String image;
     private String password;
+    private Boolean active = false;
 
     @Column(unique = true)
     private String username;
@@ -38,16 +39,15 @@ public class User implements GenericEntity<User> {
     @Column(unique = true)
     private String email;
 
-    private Long activationCode;
+    private String activationCode;
     private LocalDateTime codeDate;
-    private Boolean active = false;
-
+    
     private String newPassword;
-    private Long newPassCode;
+    private String newPassCode;
     private LocalDateTime newPassDate;
     
     private String newEmail;
-    private Long newEmailCode;
+    private String newEmailCode;
     private LocalDateTime newEmailDate;
 
 }

@@ -17,6 +17,6 @@ public class ActivateUser {
     
     private String username;
     private String email;
-    private Long activationCode;
+    private String activationCode;
 
 }

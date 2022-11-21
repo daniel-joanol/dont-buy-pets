@@ -1,6 +1,5 @@
 package com.danieljoanol.dontbuypets.service.sparkpost;
 
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
 import com.sparkpost.Client;
@@ -14,20 +13,19 @@ import lombok.extern.slf4j.Slf4j;
 @Slf4j
 public class SparkPostServiceImpl implements SparkPostService {
 
-    @Value("${sparkpost.key}")
-    private String API_KEY;
+    private String API_KEY = System.getenv("SPARK_KEY");
+    private String localEmail = System.getenv("SPARK_EMAIL");
 
-    @Value("${sparkpost.email}")
-    private String localEmail;
-
-    private final String SIGNATURE = "\n\nBest regards,\nDon't buy pets' team";
+    private final String SIGNATURE = "\n\nBest regards,\nDon't buy pets team";
 
     Client client = new Client(API_KEY);
 
     @Override
-    public void sendActivationCode(String email, String username, Long code) 
+    public void sendActivationCode(String email, String username, String code) 
             throws SparkPostException {
-        
+
+        System.out.println(API_KEY);
+
         String subject = "Activation code";
         String text = "Hi " + username + ",";
         text += "\n\n Your new activation code is " + code + ".";
@@ -47,7 +45,7 @@ public class SparkPostServiceImpl implements SparkPostService {
     }
 
     @Override
-    public void sendNewEmailCode(String email, String username, Long code) 
+    public void sendNewEmailCode(String email, String username, String code) 
             throws SparkPostException {
         
         String subject = "Update username";

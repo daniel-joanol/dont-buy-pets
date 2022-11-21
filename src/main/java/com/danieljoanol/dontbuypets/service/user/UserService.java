@@ -26,4 +26,7 @@ public interface UserService extends GenericService<User> {
 
     String updateUser(User update) throws SparkPostException, DuplicatedUserDataException;
     
+    User activateNewPassword(ActivateUser activateUser) throws SparkPostException, ActivationException;
+
+    User activateNewEmail(ActivateUser activateUser) throws SparkPostException, ActivationException;
 }

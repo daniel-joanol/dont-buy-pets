@@ -1,11 +1,13 @@
 package com.danieljoanol.dontbuypets.controller;
 
 import java.io.IOException;
+import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.CrossOrigin;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -59,7 +61,7 @@ public class UserController {
     @ApiResponses(value = { //
             @ApiResponse(code = 200, message = "SUCCESS"),
             @ApiResponse(code = 500, message = "System error")})
-    @PostMapping("/activateUser")
+    @PostMapping("/activate/account")
     public ResponseEntity<UserDTO> activateUser(@RequestBody ActivateUser activateUser) 
             throws SparkPostException, ActivationException {
         User entity = userService.activateUser(activateUser);
@@ -67,12 +69,12 @@ public class UserController {
         return ResponseEntity.ok(response);
     }
 
-    @ApiOperation(value = "Activate user", httpMethod = "GET")
+    @ApiOperation(value = "Get new activation code by email", httpMethod = "POST")
     @ApiResponses(value = { //
             @ApiResponse(code = 200, message = "SUCCESS"),
             @ApiResponse(code = 500, message = "System error")})
-    @GetMapping("/activationCode")
-    public ResponseEntity<String> getActivationCode(@RequestBody ActivateUser activateUser) 
+    @PostMapping("/activate/account/newCode")
+    public ResponseEntity<String> getNewActivationCode(@RequestBody ActivateUser activateUser) 
             throws SparkPostException, ActivationException {
         String response = userService.newActivationCode(activateUser);
         return ResponseEntity.ok(response);
@@ -94,13 +96,66 @@ public class UserController {
             @ApiResponse(code = 200, message = "SUCCESS"),
             @ApiResponse(code = 500, message = "System error")})
     @PutMapping("/")
-    public ResponseEntity<String> activateUser(@RequestBody UserDTO dto) 
+    public ResponseEntity<String> updateUser(@RequestBody UserDTO dto) 
             throws SparkPostException, ActivationException, DuplicatedUserDataException {
         User entity = userAssembler.convertFromDTO(dto);
         String response = userService.updateUser(entity);
         return ResponseEntity.ok(response);
     }
 
-    //TODO: endpoint to confirm the change of the email and password
+    @ApiOperation(value = "Activate new password", httpMethod = "POST")
+    @ApiResponses(value = { //
+            @ApiResponse(code = 200, message = "SUCCESS"),
+            @ApiResponse(code = 500, message = "System error")})
+    @PostMapping("/activate/password")
+    public ResponseEntity<UserDTO> activateNewPassword(@RequestBody ActivateUser activateUser) 
+            throws SparkPostException, ActivationException {
+        User entity = userService.activateNewPassword(activateUser);
+        UserDTO response = userAssembler.convertToDTO(entity);
+        return ResponseEntity.ok(response);
+    }
+
+    @ApiOperation(value = "Activate new email", httpMethod = "POST")
+    @ApiResponses(value = { //
+            @ApiResponse(code = 200, message = "SUCCESS"),
+            @ApiResponse(code = 500, message = "System error")})
+    @PostMapping("/activate/email")
+    public ResponseEntity<UserDTO> activateNewEmail(@RequestBody ActivateUser activateUser) 
+            throws SparkPostException, ActivationException {
+        User entity = userService.activateNewEmail(activateUser);
+        UserDTO response = userAssembler.convertToDTO(entity);
+        return ResponseEntity.ok(response);
+    }
     
+    @ApiOperation(value = "Get User by Id", httpMethod = "GET")
+    @ApiResponses(value = { //
+            @ApiResponse(code = 200, message = "SUCCESS"),
+            @ApiResponse(code = 500, message = "System error")})
+    @GetMapping("/{id}")
+    public ResponseEntity<UserDTO> getOne(@PathVariable Long id) {
+        User entity = userService.get(id);
+        UserDTO response = userAssembler.convertToDTO(entity);
+        return ResponseEntity.ok(response);
+    }
+
+    @ApiOperation(value = "Get all Users", httpMethod = "GET")
+    @ApiResponses(value = { //
+            @ApiResponse(code = 200, message = "SUCCESS"),
+            @ApiResponse(code = 500, message = "System error")})
+    @GetMapping("/")
+    public ResponseEntity<List<UserDTO>> getAll() {
+        List<User> entities = userService.getAll();
+        List<UserDTO> response = userAssembler.convertToDTO(entities);
+        return ResponseEntity.ok(response);
+    }
+
+    @ApiOperation(value = "Delete User", httpMethod = "DELETE")
+    @ApiResponses(value = { //
+            @ApiResponse(code = 204, message = "NO CONTENT"),
+            @ApiResponse(code = 500, message = "System error")})
+    @DeleteMapping("/{id}")
+    public ResponseEntity delete(@PathVariable Long id) {
+        userService.delete(id);
+        return ResponseEntity.noContent().build();
+    }
 }
