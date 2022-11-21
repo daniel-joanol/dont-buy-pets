@@ -1,5 +1,7 @@
 package com.danieljoanol.dontbuypets.controller;
 
+import java.util.NoSuchElementException;
+
 import javax.persistence.EntityNotFoundException;
 
 import org.springframework.http.HttpHeaders;
@@ -10,6 +12,8 @@ import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.context.request.WebRequest;
 import org.springframework.web.servlet.mvc.method.annotation.ResponseEntityExceptionHandler;
 
+import com.danieljoanol.dontbuypets.exception.ActivationException;
+import com.danieljoanol.dontbuypets.exception.DuplicatedUserDataException;
 import com.danieljoanol.dontbuypets.exception.ErrorResponse;
 
 import lombok.extern.slf4j.Slf4j;
@@ -18,7 +22,8 @@ import lombok.extern.slf4j.Slf4j;
 @ControllerAdvice
 public class ExceptionHandlerController extends ResponseEntityExceptionHandler {
 
-    @ExceptionHandler(value = {EntityNotFoundException.class})
+    @ExceptionHandler(value = {EntityNotFoundException.class, NoSuchElementException.class, DuplicatedUserDataException.class,
+            ActivationException.class})
     protected ResponseEntity<Object> handleEntityNotFoundEx(
             RuntimeException ex, WebRequest request) {
 

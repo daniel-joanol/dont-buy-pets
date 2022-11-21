@@ -23,6 +23,8 @@ public class UserDTO extends GenericDTO<User> {
     private String email;
     private Roles role;
     private String image;
+    private Boolean active;
+    private String password;
 
     public UserDTO(User entity) {
         this.id = entity.getId();
@@ -31,6 +33,8 @@ public class UserDTO extends GenericDTO<User> {
         this.email = entity.getEmail();
         this.role = entity.getRole();
         this.image = entity.getImage();
+        this.active = entity.getActive();
+        this.password = entity.getPassword();
     }
 
     @Override
@@ -42,6 +46,8 @@ public class UserDTO extends GenericDTO<User> {
         entity.setEmail(this.email);
         entity.setRole(this.role);
         entity.setImage(this.image);
+        entity.setActive(this.active);
+        entity.setPassword(this.password);
 
         return entity;
     }

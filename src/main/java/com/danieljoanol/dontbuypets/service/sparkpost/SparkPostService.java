@@ -4,7 +4,15 @@ import com.sparkpost.exception.SparkPostException;
 
 public interface SparkPostService {
     
-    String sendActivationCode(String email, String username, Long code) 
+    void sendActivationCode(String email, String username, Long code) 
             throws SparkPostException;
 
+    void sendNewEmailCode(String email, String username, Long code) 
+            throws SparkPostException;
+
+    void confirmActivation(String email, String username)
+            throws SparkPostException;
+
+    void confirmUpdate(String email, String username)
+            throws SparkPostException;
 }

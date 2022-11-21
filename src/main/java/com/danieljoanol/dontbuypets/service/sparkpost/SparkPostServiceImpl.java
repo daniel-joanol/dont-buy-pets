@@ -20,29 +20,92 @@ public class SparkPostServiceImpl implements SparkPostService {
     @Value("${sparkpost.email}")
     private String localEmail;
 
-    private String signature = "\n\nBest regards,\nDon't buy pets' team";
+    private final String SIGNATURE = "\n\nBest regards,\nDon't buy pets' team";
 
     Client client = new Client(API_KEY);
 
     @Override
-    public String sendActivationCode(String email, String username, Long code) 
+    public void sendActivationCode(String email, String username, Long code) 
             throws SparkPostException {
         
+        String subject = "Activation code";
         String text = "Hi " + username + ",";
-        text += "\n Your new activation code is " + code + "." + signature;
+        text += "\n\n Your new activation code is " + code + ".";
+        text += "\nRemember that the code will expire in 5 minutes.";
+        text += SIGNATURE;
         
         try {
             client.sendMessage(
                 localEmail, 
                 email,
-                "Activation code", 
+                subject, 
                 text,
                 text);
         } catch (SparkPostException ex) {
             log.error(ex.getMessage());
         }
+    }
 
-        return "Check your email box";
+    @Override
+    public void sendNewEmailCode(String email, String username, Long code) 
+            throws SparkPostException {
+        
+        String subject = "Update username";
+        String text = "Hi " + username + ",";
+        text += "\n\nYour code is " + code + ".";
+        text += "\nRemember that the code will expire in 5 minutes.";
+        text += SIGNATURE;
+        
+        try {
+            client.sendMessage(
+                localEmail, 
+                email,
+                subject, 
+                text,
+                text);
+        } catch (SparkPostException ex) {
+            log.error(ex.getMessage());
+        }
+    }
+
+    @Override
+    public void confirmActivation(String email, String username) throws SparkPostException {
+        
+        String subject = "Account activated";
+        String text = "Hi " + username + ",";
+        text += "\n\n Your account has been activated succesfully.";
+        text += SIGNATURE;
+
+        try {
+            client.sendMessage(
+                localEmail, 
+                email,
+                subject, 
+                text,
+                text);
+        } catch (SparkPostException ex) {
+            log.error(ex.getMessage());
+        }
+    }
+
+    @Override
+    public void confirmUpdate(String email, String username) throws SparkPostException {
+        
+        String subject = "Account updated";
+        String text = "Hi " + username + ",";
+        text += "\n\n Your account has been updated succesfully.";
+        text += SIGNATURE;
+
+        try {
+            client.sendMessage(
+                localEmail, 
+                email,
+                subject, 
+                text,
+                text);
+        } catch (SparkPostException ex) {
+            log.error(ex.getMessage());
+        }
     }
 
 }

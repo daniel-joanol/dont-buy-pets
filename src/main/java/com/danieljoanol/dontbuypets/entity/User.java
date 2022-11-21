@@ -1,5 +1,7 @@
 package com.danieljoanol.dontbuypets.entity;
 
+import java.time.LocalDateTime;
+
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
@@ -28,11 +30,24 @@ public class User implements GenericEntity<User> {
     private String name;
     private Roles role;
     private String image;
+    private String password;
 
     @Column(unique = true)
     private String username;
 
     @Column(unique = true)
     private String email;
+
+    private Long activationCode;
+    private LocalDateTime codeDate;
+    private Boolean active = false;
+
+    private String newPassword;
+    private Long newPassCode;
+    private LocalDateTime newPassDate;
     
+    private String newEmail;
+    private Long newEmailCode;
+    private LocalDateTime newEmailDate;
+
 }
