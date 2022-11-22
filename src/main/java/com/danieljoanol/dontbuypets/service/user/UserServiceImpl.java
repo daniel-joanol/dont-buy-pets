@@ -10,7 +10,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
-import com.danieljoanol.dontbuypets.controller.request.ActivateUser;
+import com.danieljoanol.dontbuypets.controller.request.ActivateUserDTO;
 import com.danieljoanol.dontbuypets.entity.User;
 import com.danieljoanol.dontbuypets.enumarator.Roles;
 import com.danieljoanol.dontbuypets.exception.ActivationException;
@@ -70,7 +70,7 @@ public class UserServiceImpl extends GenericServiceImpl<User> implements UserSer
     }
 
     @Override
-    public String newActivationCode(ActivateUser activateUser) throws SparkPostException, ActivationException {
+    public String newActivationCode(ActivateUserDTO activateUser) throws SparkPostException, ActivationException {
         User user = userRepository.findByUsername(activateUser.getUsername()).orElseThrow();
 
         if (!user.getEmail().equalsIgnoreCase(activateUser.getEmail())) {
@@ -141,7 +141,7 @@ public class UserServiceImpl extends GenericServiceImpl<User> implements UserSer
     }
 
     @Override
-    public User activateUser(ActivateUser activateUser) throws SparkPostException, ActivationException {
+    public User activateUser(ActivateUserDTO activateUser) throws SparkPostException, ActivationException {
         User user = userRepository.findByUsername(activateUser.getUsername()).orElseThrow();
         LocalDateTime now = LocalDateTime.now();
 
@@ -159,7 +159,7 @@ public class UserServiceImpl extends GenericServiceImpl<User> implements UserSer
     }
 
     @Override
-    public User activateNewPassword(ActivateUser activateUser) throws SparkPostException, ActivationException {
+    public User activateNewPassword(ActivateUserDTO activateUser) throws SparkPostException, ActivationException {
         User user = userRepository.findByUsername(activateUser.getUsername()).orElseThrow();
         LocalDateTime now = LocalDateTime.now();
 
@@ -178,7 +178,7 @@ public class UserServiceImpl extends GenericServiceImpl<User> implements UserSer
     }
 
     @Override
-    public User activateNewEmail(ActivateUser activateUser) throws SparkPostException, ActivationException {
+    public User activateNewEmail(ActivateUserDTO activateUser) throws SparkPostException, ActivationException {
         User user = userRepository.findByUsername(activateUser.getUsername()).orElseThrow();
         LocalDateTime now = LocalDateTime.now();
 

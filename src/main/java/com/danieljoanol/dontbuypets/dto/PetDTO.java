@@ -2,6 +2,9 @@ package com.danieljoanol.dontbuypets.dto;
 
 import java.util.List;
 
+import javax.validation.constraints.NotEmpty;
+import javax.validation.constraints.NotNull;
+
 import com.danieljoanol.dontbuypets.entity.Pet;
 import com.danieljoanol.dontbuypets.enumarator.AnimalSpecies;
 import com.fasterxml.jackson.annotation.JsonInclude;
@@ -20,10 +23,18 @@ import lombok.Setter;
 public class PetDTO extends GenericDTO<Pet> {
     
     private Long id;
+
+    @NotEmpty(message = "Name can't be empty")
     private String name;
+
+    @NotNull(message = "GuardianId can't be null")
     private Long guardianId;
+
+    @NotEmpty(message = "AnimalSpecies can't be empty")
     private AnimalSpecies species;
     private List<String> images;
+
+    @NotEmpty(message = "Description can't be empty")
     private String description;
 
     public PetDTO(Pet entity) {

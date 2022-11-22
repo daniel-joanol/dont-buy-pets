@@ -4,7 +4,7 @@ import java.io.IOException;
 
 import org.springframework.web.multipart.MultipartFile;
 
-import com.danieljoanol.dontbuypets.controller.request.ActivateUser;
+import com.danieljoanol.dontbuypets.controller.request.ActivateUserDTO;
 import com.danieljoanol.dontbuypets.entity.User;
 import com.danieljoanol.dontbuypets.exception.ActivationException;
 import com.danieljoanol.dontbuypets.exception.DuplicatedUserDataException;
@@ -20,13 +20,13 @@ public interface UserService extends GenericService<User> {
 
     String createUser(User entity) throws DuplicatedUserDataException, SparkPostException;
 
-    User activateUser(ActivateUser activateUser) throws SparkPostException, ActivationException;
+    User activateUser(ActivateUserDTO activateUser) throws SparkPostException, ActivationException;
 
-    String newActivationCode(ActivateUser activateUser) throws SparkPostException, ActivationException;
+    String newActivationCode(ActivateUserDTO activateUser) throws SparkPostException, ActivationException;
 
     String updateUser(User update) throws SparkPostException, DuplicatedUserDataException;
     
-    User activateNewPassword(ActivateUser activateUser) throws SparkPostException, ActivationException;
+    User activateNewPassword(ActivateUserDTO activateUser) throws SparkPostException, ActivationException;
 
-    User activateNewEmail(ActivateUser activateUser) throws SparkPostException, ActivationException;
+    User activateNewEmail(ActivateUserDTO activateUser) throws SparkPostException, ActivationException;
 }

@@ -3,6 +3,8 @@ package com.danieljoanol.dontbuypets.controller;
 import java.io.IOException;
 import java.util.List;
 
+import javax.validation.Valid;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
@@ -25,7 +27,7 @@ import com.danieljoanol.dontbuypets.exception.EmptyImageException;
 import com.danieljoanol.dontbuypets.exception.InvalidImageFormatException;
 import com.danieljoanol.dontbuypets.service.user.UserService;
 import com.sparkpost.exception.SparkPostException;
-import com.danieljoanol.dontbuypets.controller.request.ActivateUser;
+import com.danieljoanol.dontbuypets.controller.request.ActivateUserDTO;
 import com.danieljoanol.dontbuypets.controller.util.URL;
 
 import io.swagger.annotations.Api;
@@ -62,7 +64,7 @@ public class UserController {
             @ApiResponse(code = 200, message = "SUCCESS"),
             @ApiResponse(code = 500, message = "System error")})
     @PostMapping("/activate/account")
-    public ResponseEntity<UserDTO> activateUser(@RequestBody ActivateUser activateUser) 
+    public ResponseEntity<UserDTO> activateUser(@Valid @RequestBody ActivateUserDTO activateUser) 
             throws SparkPostException, ActivationException {
         User entity = userService.activateUser(activateUser);
         UserDTO response = userAssembler.convertToDTO(entity);
@@ -74,7 +76,7 @@ public class UserController {
             @ApiResponse(code = 200, message = "SUCCESS"),
             @ApiResponse(code = 500, message = "System error")})
     @PostMapping("/activate/account/newCode")
-    public ResponseEntity<String> getNewActivationCode(@RequestBody ActivateUser activateUser) 
+    public ResponseEntity<String> getNewActivationCode(@Valid @RequestBody ActivateUserDTO activateUser) 
             throws SparkPostException, ActivationException {
         String response = userService.newActivationCode(activateUser);
         return ResponseEntity.ok(response);
@@ -108,7 +110,7 @@ public class UserController {
             @ApiResponse(code = 200, message = "SUCCESS"),
             @ApiResponse(code = 500, message = "System error")})
     @PostMapping("/activate/password")
-    public ResponseEntity<UserDTO> activateNewPassword(@RequestBody ActivateUser activateUser) 
+    public ResponseEntity<UserDTO> activateNewPassword(@Valid @RequestBody ActivateUserDTO activateUser) 
             throws SparkPostException, ActivationException {
         User entity = userService.activateNewPassword(activateUser);
         UserDTO response = userAssembler.convertToDTO(entity);
@@ -120,7 +122,7 @@ public class UserController {
             @ApiResponse(code = 200, message = "SUCCESS"),
             @ApiResponse(code = 500, message = "System error")})
     @PostMapping("/activate/email")
-    public ResponseEntity<UserDTO> activateNewEmail(@RequestBody ActivateUser activateUser) 
+    public ResponseEntity<UserDTO> activateNewEmail(@Valid @RequestBody ActivateUserDTO activateUser) 
             throws SparkPostException, ActivationException {
         User entity = userService.activateNewEmail(activateUser);
         UserDTO response = userAssembler.convertToDTO(entity);

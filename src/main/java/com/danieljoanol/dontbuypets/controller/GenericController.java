@@ -2,6 +2,8 @@ package com.danieljoanol.dontbuypets.controller;
 
 import java.util.List;
 
+import javax.validation.Valid;
+
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -58,7 +60,7 @@ public abstract class GenericController<T extends GenericEntity<T>, U extends Ge
     @ApiResponses(value = { //
             @ApiResponse(code = 200, message = "SUCCESS"), @ApiResponse(code = 500, message = "System error") })
     @PutMapping("/")
-    public ResponseEntity<U> update(@RequestBody U updated) {
+    public ResponseEntity<U> update(@RequestBody @Valid U updated) {
         T entity = this.assembler.convertFromDTO(updated);
         U vo = this.assembler.convertToDTO(service.update(entity));
         return ResponseEntity.ok(vo);
@@ -67,7 +69,7 @@ public abstract class GenericController<T extends GenericEntity<T>, U extends Ge
     @ApiResponses(value = { //
             @ApiResponse(code = 200, message = "SUCCESS"), @ApiResponse(code = 500, message = "System error") })
     @PostMapping("/")
-    public ResponseEntity<U> create(@RequestBody U created) {
+    public ResponseEntity<U> create(@RequestBody @Valid U created) {
         T entity = this.assembler.convertFromDTO(created);
         U vo = this.assembler.convertToDTO(service.create(entity));
         return ResponseEntity.ok(vo);
@@ -76,7 +78,7 @@ public abstract class GenericController<T extends GenericEntity<T>, U extends Ge
     @ApiResponses(value = { //
             @ApiResponse(code = 200, message = "SUCCESS"), @ApiResponse(code = 500, message = "System error") })
     @PostMapping("/list")
-    public ResponseEntity<List<U>> createWithList(@RequestBody List<U> tList) {
+    public ResponseEntity<List<U>> createWithList(@RequestBody @Valid List<U> tList) {
         List<T> entities = this.assembler.convertFromDTO(tList);
         List<U> vos = this.assembler.convertToDTO(service.create(entities));
         return ResponseEntity.ok(vos);

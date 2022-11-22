@@ -2,6 +2,9 @@ package com.danieljoanol.dontbuypets.dto;
 
 import java.util.List;
 
+import javax.validation.constraints.NotEmpty;
+import javax.validation.constraints.NotNull;
+
 import com.danieljoanol.dontbuypets.entity.Guardian;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonInclude.Include;
@@ -19,12 +22,22 @@ import lombok.Setter;
 public class GuardianDTO extends GenericDTO<Guardian> {
     
     private Long id;
+
+    @NotEmpty(message = "Name can't be empty")
     private String name;
+
+    @NotNull(message = "CityId can't be null")
     private Long cityId;
+
+    @NotEmpty(message = "Phones can't be empty")
     private List<String> phones;
+
+    @NotEmpty(message = "Email can't be empty")
     private String email;
     private String website;
     private String image;
+
+    @NotEmpty(message = "Address can't be empty")
     private String address;
 
     public GuardianDTO(Guardian entity) {
