@@ -52,7 +52,7 @@ public class UserController {
             @ApiResponse(code = 200, message = "SUCCESS"),
             @ApiResponse(code = 500, message = "System error")})
     @PostMapping("/")
-    public ResponseEntity<String> create(@RequestBody UserDTO dto) 
+    public ResponseEntity<String> create(@Valid @RequestBody UserDTO dto) 
             throws DuplicatedUserDataException, SparkPostException {
         User entity = userAssembler.convertFromDTO(dto);
         String response = userService.createUser(entity);
