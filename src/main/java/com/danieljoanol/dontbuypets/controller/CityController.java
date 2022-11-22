@@ -8,6 +8,7 @@ import com.danieljoanol.dontbuypets.assembler.CityAssembler;
 import com.danieljoanol.dontbuypets.dto.CityDTO;
 import com.danieljoanol.dontbuypets.entity.City;
 import com.danieljoanol.dontbuypets.repository.CityRepository;
+import com.danieljoanol.dontbuypets.controller.util.URL;
 
 import io.swagger.annotations.Api;
 

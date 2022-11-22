@@ -1,4 +1,6 @@
 package com.danieljoanol.dontbuypets.dto;
+import javax.validation.constraints.NotEmpty;
+
 import com.danieljoanol.dontbuypets.entity.Country;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonInclude.Include;
@@ -16,7 +18,11 @@ import lombok.Setter;
 public class CountryDTO extends GenericDTO<Country> {
 
     private Long id;
+
+    @NotEmpty(message = "Name can't be empty")
     private String name;
+
+    @NotEmpty(message = "ISO can't be empty")
     private String ISO;
 
     public CountryDTO(Country entity) {

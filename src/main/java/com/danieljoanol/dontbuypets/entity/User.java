@@ -1,5 +1,7 @@
 package com.danieljoanol.dontbuypets.entity;
 
+import java.time.LocalDateTime;
+
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
@@ -19,7 +21,7 @@ import lombok.Setter;
 @NoArgsConstructor
 @AllArgsConstructor
 @Entity
-@Table(name = "moderator")
+@Table(name = "user")
 public class User implements GenericEntity<User> {
     
     @Id
@@ -28,11 +30,24 @@ public class User implements GenericEntity<User> {
     private String name;
     private Roles role;
     private String image;
+    private String password;
+    private Boolean active = false;
 
     @Column(unique = true)
     private String username;
 
     @Column(unique = true)
     private String email;
+
+    private String activationCode;
+    private LocalDateTime codeDate;
     
+    private String newPassword;
+    private String newPassCode;
+    private LocalDateTime newPassDate;
+    
+    private String newEmail;
+    private String newEmailCode;
+    private LocalDateTime newEmailDate;
+
 }

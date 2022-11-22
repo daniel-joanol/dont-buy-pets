@@ -8,6 +8,7 @@ import com.danieljoanol.dontbuypets.assembler.RegionAssembler;
 import com.danieljoanol.dontbuypets.dto.RegionDTO;
 import com.danieljoanol.dontbuypets.entity.Region;
 import com.danieljoanol.dontbuypets.repository.RegionRepository;
+import com.danieljoanol.dontbuypets.controller.util.URL;
 
 import io.swagger.annotations.Api;
 

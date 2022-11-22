@@ -1,5 +1,7 @@
 package com.danieljoanol.dontbuypets.dto;
 
+import javax.validation.constraints.NotBlank;
+
 import com.danieljoanol.dontbuypets.entity.User;
 import com.danieljoanol.dontbuypets.enumarator.Roles;
 import com.fasterxml.jackson.annotation.JsonInclude;
@@ -18,11 +20,22 @@ import lombok.Setter;
 public class UserDTO extends GenericDTO<User> {
     
     private Long id;
+
+    @NotBlank(message = "Name can't be empty")
     private String name;
+
+    @NotBlank(message = "Username can't be empty")
     private String username;
+
+    @NotBlank(message = "Email can't be empty")
     private String email;
+
     private Roles role;
     private String image;
+    private Boolean active;
+
+    @NotBlank(message = "Password can't be empty")
+    private String password;
 
     public UserDTO(User entity) {
         this.id = entity.getId();
@@ -31,6 +44,8 @@ public class UserDTO extends GenericDTO<User> {
         this.email = entity.getEmail();
         this.role = entity.getRole();
         this.image = entity.getImage();
+        this.active = entity.getActive();
+        this.password = entity.getPassword();
     }
 
     @Override
@@ -42,6 +57,7 @@ public class UserDTO extends GenericDTO<User> {
         entity.setEmail(this.email);
         entity.setRole(this.role);
         entity.setImage(this.image);
+        entity.setActive(this.active);
 
         return entity;
     }
