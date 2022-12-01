@@ -1,7 +1,7 @@
 package com.danieljoanol.dontbuypets.dto;
 
-import java.util.ArrayList;
-import java.util.List;
+import java.util.HashSet;
+import java.util.Set;
 
 import javax.validation.constraints.NotBlank;
 
@@ -38,8 +38,8 @@ public class RoleDTO extends GenericDTO<Role> {
         return entity;
     }
 
-    public static List<Role> toEntity(List<RoleDTO> dtos) {
-        List<Role> entities = new ArrayList<>();
+    public static Set<Role> toEntity(Set<RoleDTO> dtos) {
+        Set<Role> entities = new HashSet<>();
         for (RoleDTO dto : dtos) {
             Role role = new Role();
             role.setId(dto.getId());
@@ -50,8 +50,8 @@ public class RoleDTO extends GenericDTO<Role> {
         return entities;
     }
 
-    public static List<RoleDTO> fromEntity(List<Role> entities) {
-        List<RoleDTO> dtos = new ArrayList<>();
+    public static Set<RoleDTO> fromEntity(Set<Role> entities) {
+        Set<RoleDTO> dtos = new HashSet<>();
         for (Role entity : entities) {
             RoleDTO dto = new RoleDTO();
             dto.setId(entity.getId());

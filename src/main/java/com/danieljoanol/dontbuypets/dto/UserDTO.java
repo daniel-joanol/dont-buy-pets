@@ -1,6 +1,6 @@
 package com.danieljoanol.dontbuypets.dto;
 
-import java.util.List;
+import java.util.Set;
 
 import javax.validation.constraints.NotBlank;
 
@@ -31,7 +31,7 @@ public class UserDTO extends GenericDTO<User> {
     @NotBlank(message = "Email can't be empty")
     private String email;
 
-    private List<RoleDTO> roles;
+    private Set<RoleDTO> roles;
     private String image;
     private Boolean active;
 

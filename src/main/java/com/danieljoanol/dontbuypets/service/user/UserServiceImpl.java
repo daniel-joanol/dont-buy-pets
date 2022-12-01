@@ -2,24 +2,27 @@ package com.danieljoanol.dontbuypets.service.user;
 
 import java.io.IOException;
 import java.time.LocalDateTime;
-import java.util.ArrayList;
-import java.util.List;
+import java.util.HashSet;
 import java.util.Random;
+import java.util.Set;
 
 import javax.persistence.EntityNotFoundException;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
 import com.danieljoanol.dontbuypets.controller.request.ActivateUserDTO;
 import com.danieljoanol.dontbuypets.entity.Role;
 import com.danieljoanol.dontbuypets.entity.User;
+import com.danieljoanol.dontbuypets.entity.UserCodes;
 import com.danieljoanol.dontbuypets.exception.ActivationException;
 import com.danieljoanol.dontbuypets.exception.DuplicatedUserDataException;
 import com.danieljoanol.dontbuypets.exception.EmptyImageException;
 import com.danieljoanol.dontbuypets.exception.InvalidImageFormatException;
 import com.danieljoanol.dontbuypets.repository.RoleRepository;
+import com.danieljoanol.dontbuypets.repository.UserCodesRepository;
 import com.danieljoanol.dontbuypets.repository.UserRepository;
 import com.danieljoanol.dontbuypets.service.cloud.CloudinaryService;
 import com.danieljoanol.dontbuypets.service.generic.GenericServiceImpl;
@@ -40,6 +43,12 @@ public class UserServiceImpl extends GenericServiceImpl<User> implements UserSer
     @Autowired
     private RoleRepository roleRepository;
 
+    @Autowired
+    private UserCodesRepository userCodesRepository;
+
+    @Autowired
+    private PasswordEncoder encoder;
+
     private final Random random = new Random();
 
     private final String DEFAULT_MESSAGE = "Check your email box";
@@ -54,7 +63,8 @@ public class UserServiceImpl extends GenericServiceImpl<User> implements UserSer
         entity.setId(null);
         entity.setImage(null);
         entity.setActive(false);
-        List<Role> roles = new ArrayList<>();
+        entity.setPassword(encoder.encode(entity.getPassword()));
+        Set<Role> roles = new HashSet<>();
         roles.add(roleRepository.findByName("USER")
                 .orElseThrow(() -> new Exception("Error while trying to assing roles/permissions")));
         entity.setRoles(roles);
@@ -67,13 +77,17 @@ public class UserServiceImpl extends GenericServiceImpl<User> implements UserSer
             throw new DuplicatedUserDataException("This username is already being used");
         }
 
-        String code = getCode();
-        entity.setActivationCode(code);
-        entity.setCodeDate(LocalDateTime.now());
         entity = userRepository.save(entity);
 
+        UserCodes codes = new UserCodes();
+        codes.setUserId(entity.getId());
+        String code = getCode();
+        codes.setActivationCode(code);
+        codes.setActivationCodeDate(LocalDateTime.now());
+        codes = userCodesRepository.save(codes);
+
         sparkPostService.sendActivationCode(
-                entity.getEmail(), entity.getUsername(), entity.getActivationCode());
+                entity.getEmail(), entity.getUsername(), codes.getActivationCode());
 
         return DEFAULT_MESSAGE;
     }
@@ -87,13 +101,14 @@ public class UserServiceImpl extends GenericServiceImpl<User> implements UserSer
             throw new ActivationException("This username does not belong to this email");
         }
 
+        UserCodes codes = userCodesRepository.findByUserId(user.getId()).orElseThrow();
         String code = getCode();
-        user.setActivationCode(code);
-        user.setCodeDate(LocalDateTime.now());
-        user = userRepository.save(user);
+        codes.setActivationCode(code);
+        codes.setActivationCodeDate(LocalDateTime.now());
+        codes = userCodesRepository.save(codes);
         
         sparkPostService.sendActivationCode(
-                activateUser.getEmail(), activateUser.getUsername(), user.getActivationCode());
+                activateUser.getEmail(), activateUser.getUsername(), codes.getActivationCode());
         return DEFAULT_MESSAGE;
     }
 
@@ -113,6 +128,8 @@ public class UserServiceImpl extends GenericServiceImpl<User> implements UserSer
         User user = userRepository.findById(update.getId())
                 .orElseThrow(() -> new EntityNotFoundException("This username does not exist"));
 
+        UserCodes codes = userCodesRepository.findByUserId(user.getId()).orElseThrow();
+
         if (!update.getUsername().equalsIgnoreCase(user.getUsername())) {
             if (userRepository.existsByUsername(update.getUsername())) {
                 throw new DuplicatedUserDataException("This username is already being used");
@@ -128,24 +145,24 @@ public class UserServiceImpl extends GenericServiceImpl<User> implements UserSer
             if (userRepository.existsByEmail(update.getEmail())) {
                 throw new DuplicatedUserDataException("This email is already being used");
             } else {
-                user.setNewEmail(update.getEmail());
+                codes.setNewEmail(update.getEmail());
                 String code = getCode();
-                user.setNewEmailCode(code);
-                user.setNewEmailDate(LocalDateTime.now());
-                user = userRepository.save(user);
+                codes.setNewEmailCode(code);
+                codes.setNewEmailCodeDate(LocalDateTime.now());
+                codes = userCodesRepository.save(codes);
                 sparkPostService.sendNewEmailCode(
-                    user.getNewEmail(), user.getUsername(), user.getNewEmailCode());
+                    codes.getNewEmail(), user.getUsername(), codes.getNewEmailCode());
             }
         }
 
         if (!update.getPassword().equalsIgnoreCase(user.getPassword())) {
-            user.setNewPassword(update.getPassword());
+            codes.setNewPassword(update.getPassword());
             String code = getCode();
-            user.setNewPassCode(code);
-            user.setNewPassDate(LocalDateTime.now());
-            user = userRepository.save(user);
+            codes.setNewPassCode(code);
+            codes.setNewPassCodeDate(LocalDateTime.now());
+            codes = userCodesRepository.save(codes);
             sparkPostService.sendActivationCode(
-                    user.getEmail(), user.getUsername(), user.getNewPassCode());
+                    user.getEmail(), user.getUsername(), codes.getNewPassCode());
         }
 
         return DEFAULT_MESSAGE;
@@ -155,14 +172,16 @@ public class UserServiceImpl extends GenericServiceImpl<User> implements UserSer
     public User activateUser(ActivateUserDTO activateUser) throws SparkPostException, ActivationException {
         User user = userRepository.findByUsername(activateUser.getUsername())
                 .orElseThrow(() -> new EntityNotFoundException("This username does not exist"));
+        UserCodes codes = userCodesRepository.findByUserId(user.getId()).orElseThrow();
         LocalDateTime now = LocalDateTime.now();
 
-        if (activateUser.getActivationCode().equals(user.getActivationCode())
-                && now.isBefore(user.getCodeDate().plusMinutes(5))) {
+        if (activateUser.getActivationCode().equals(codes.getActivationCode())
+                && now.isBefore(codes.getActivationCodeDate().plusMinutes(5))) {
             user.setActive(true);
-            user.setActivationCode(null);
-            user.setCodeDate(null);
+            codes.setActivationCode(null);
+            codes.setActivationCodeDate(null);
             user = userRepository.save(user);
+            codes = userCodesRepository.save(codes);
             sparkPostService.confirmActivation(user.getEmail(), user.getUsername());
             return user;
         } else {
@@ -174,15 +193,17 @@ public class UserServiceImpl extends GenericServiceImpl<User> implements UserSer
     public User activateNewPassword(ActivateUserDTO activateUser) throws SparkPostException, ActivationException {
         User user = userRepository.findByUsername(activateUser.getUsername())
                 .orElseThrow(() -> new EntityNotFoundException("This username does not exist"));
+        UserCodes codes = userCodesRepository.findByUserId(user.getId()).orElseThrow();
         LocalDateTime now = LocalDateTime.now();
 
-        if (activateUser.getActivationCode().equalsIgnoreCase(user.getNewPassCode())
-                && now.isBefore(user.getNewPassDate().plusMinutes(5))) {
-            user.setPassword(user.getNewPassword());
-            user.setNewPassword(null);
-            user.setNewPassDate(null);
-            user.setNewPassCode(null);
+        if (activateUser.getActivationCode().equalsIgnoreCase(codes.getNewPassCode())
+                && now.isBefore(codes.getNewPassCodeDate().plusMinutes(5))) {
+            user.setPassword(codes.getNewPassword());
+            codes.setNewPassword(null);
+            codes.setNewPassCodeDate(null);
+            codes.setNewPassCode(null);
             user = userRepository.save(user);
+            codes = userCodesRepository.save(codes);
             sparkPostService.confirmUpdate(user.getEmail(), user.getUsername());
             return user;
         } else {
@@ -194,15 +215,17 @@ public class UserServiceImpl extends GenericServiceImpl<User> implements UserSer
     public User activateNewEmail(ActivateUserDTO activateUser) throws SparkPostException, ActivationException {
         User user = userRepository.findByUsername(activateUser.getUsername())
                 .orElseThrow(() -> new EntityNotFoundException("This username does not exist"));
+        UserCodes codes = userCodesRepository.findByUserId(user.getId()).orElseThrow();
         LocalDateTime now = LocalDateTime.now();
 
-        if (activateUser.getActivationCode().equalsIgnoreCase(user.getNewEmailCode()) && 
-                now.isBefore(user.getNewEmailDate().plusMinutes(5))) {
-            user.setEmail(user.getNewEmail());
-            user.setNewEmail(null);
-            user.setNewEmailCode(null);
-            user.setNewEmailDate(null);
+        if (activateUser.getActivationCode().equalsIgnoreCase(codes.getNewEmailCode()) && 
+                now.isBefore(codes.getNewEmailCodeDate().plusMinutes(5))) {
+            user.setEmail(codes.getNewEmail());
+            codes.setNewEmail(null);
+            codes.setNewEmailCode(null);
+            codes.setNewEmailCodeDate(null);
             user = userRepository.save(user);
+            codes = userCodesRepository.save(codes);
             sparkPostService.confirmUpdate(user.getEmail(), user.getUsername());
             return user;
         } else {
