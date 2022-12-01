@@ -1,9 +1,10 @@
 package com.danieljoanol.dontbuypets.dto;
 
+import java.util.List;
+
 import javax.validation.constraints.NotBlank;
 
 import com.danieljoanol.dontbuypets.entity.User;
-import com.danieljoanol.dontbuypets.enumarator.Roles;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonInclude.Include;
 
@@ -18,7 +19,7 @@ import lombok.Setter;
 @Getter
 @JsonInclude(Include.NON_NULL)
 public class UserDTO extends GenericDTO<User> {
-    
+
     private Long id;
 
     @NotBlank(message = "Name can't be empty")
@@ -30,7 +31,7 @@ public class UserDTO extends GenericDTO<User> {
     @NotBlank(message = "Email can't be empty")
     private String email;
 
-    private Roles role;
+    private List<RoleDTO> roles;
     private String image;
     private Boolean active;
 
@@ -42,7 +43,7 @@ public class UserDTO extends GenericDTO<User> {
         this.name = entity.getName();
         this.username = entity.getUsername();
         this.email = entity.getEmail();
-        this.role = entity.getRole();
+        this.roles = RoleDTO.fromEntity(entity.getRoles());
         this.image = entity.getImage();
         this.active = entity.getActive();
         this.password = entity.getPassword();
@@ -55,7 +56,7 @@ public class UserDTO extends GenericDTO<User> {
         entity.setName(this.name);
         entity.setUsername(this.username);
         entity.setEmail(this.email);
-        entity.setRole(this.role);
+        entity.setRoles(RoleDTO.toEntity(this.roles));
         entity.setImage(this.image);
         entity.setActive(this.active);
 

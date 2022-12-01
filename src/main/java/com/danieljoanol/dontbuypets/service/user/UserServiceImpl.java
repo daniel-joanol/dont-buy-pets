@@ -2,6 +2,8 @@ package com.danieljoanol.dontbuypets.service.user;
 
 import java.io.IOException;
 import java.time.LocalDateTime;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Random;
 
 import javax.persistence.EntityNotFoundException;
@@ -11,12 +13,13 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
 import com.danieljoanol.dontbuypets.controller.request.ActivateUserDTO;
+import com.danieljoanol.dontbuypets.entity.Role;
 import com.danieljoanol.dontbuypets.entity.User;
-import com.danieljoanol.dontbuypets.enumarator.Roles;
 import com.danieljoanol.dontbuypets.exception.ActivationException;
 import com.danieljoanol.dontbuypets.exception.DuplicatedUserDataException;
 import com.danieljoanol.dontbuypets.exception.EmptyImageException;
 import com.danieljoanol.dontbuypets.exception.InvalidImageFormatException;
+import com.danieljoanol.dontbuypets.repository.RoleRepository;
 import com.danieljoanol.dontbuypets.repository.UserRepository;
 import com.danieljoanol.dontbuypets.service.cloud.CloudinaryService;
 import com.danieljoanol.dontbuypets.service.generic.GenericServiceImpl;
@@ -34,6 +37,9 @@ public class UserServiceImpl extends GenericServiceImpl<User> implements UserSer
     @Autowired
     private SparkPostService sparkPostService;
 
+    @Autowired
+    private RoleRepository roleRepository;
+
     private final Random random = new Random();
 
     private final String DEFAULT_MESSAGE = "Check your email box";
@@ -44,11 +50,14 @@ public class UserServiceImpl extends GenericServiceImpl<User> implements UserSer
     }
 
     @Override
-    public String createUser(User entity) throws DuplicatedUserDataException, SparkPostException {
+    public String createUser(User entity) throws Exception {
         entity.setId(null);
         entity.setImage(null);
         entity.setActive(false);
-        entity.setRole(Roles.USER);
+        List<Role> roles = new ArrayList<>();
+        roles.add(roleRepository.findByName("USER")
+                .orElseThrow(() -> new Exception("Error while trying to assing roles/permissions")));
+        entity.setRoles(roles);
 
         if (userRepository.existsByEmail(entity.getEmail())) {
             throw new DuplicatedUserDataException("This email is already being used");
@@ -71,7 +80,8 @@ public class UserServiceImpl extends GenericServiceImpl<User> implements UserSer
 
     @Override
     public String newActivationCode(ActivateUserDTO activateUser) throws SparkPostException, ActivationException {
-        User user = userRepository.findByUsername(activateUser.getUsername()).orElseThrow();
+        User user = userRepository.findByUsername(activateUser.getUsername())
+                .orElseThrow(() -> new EntityNotFoundException("This username does not exist"));
 
         if (!user.getEmail().equalsIgnoreCase(activateUser.getEmail())) {
             throw new ActivationException("This username does not belong to this email");
@@ -100,7 +110,8 @@ public class UserServiceImpl extends GenericServiceImpl<User> implements UserSer
 
     @Override
     public String updateUser(User update) throws SparkPostException, DuplicatedUserDataException {
-        User user = userRepository.findById(update.getId()).orElseThrow();
+        User user = userRepository.findById(update.getId())
+                .orElseThrow(() -> new EntityNotFoundException("This username does not exist"));
 
         if (!update.getUsername().equalsIgnoreCase(user.getUsername())) {
             if (userRepository.existsByUsername(update.getUsername())) {
@@ -142,7 +153,8 @@ public class UserServiceImpl extends GenericServiceImpl<User> implements UserSer
 
     @Override
     public User activateUser(ActivateUserDTO activateUser) throws SparkPostException, ActivationException {
-        User user = userRepository.findByUsername(activateUser.getUsername()).orElseThrow();
+        User user = userRepository.findByUsername(activateUser.getUsername())
+                .orElseThrow(() -> new EntityNotFoundException("This username does not exist"));
         LocalDateTime now = LocalDateTime.now();
 
         if (activateUser.getActivationCode().equals(user.getActivationCode())
@@ -160,7 +172,8 @@ public class UserServiceImpl extends GenericServiceImpl<User> implements UserSer
 
     @Override
     public User activateNewPassword(ActivateUserDTO activateUser) throws SparkPostException, ActivationException {
-        User user = userRepository.findByUsername(activateUser.getUsername()).orElseThrow();
+        User user = userRepository.findByUsername(activateUser.getUsername())
+                .orElseThrow(() -> new EntityNotFoundException("This username does not exist"));
         LocalDateTime now = LocalDateTime.now();
 
         if (activateUser.getActivationCode().equalsIgnoreCase(user.getNewPassCode())
@@ -179,7 +192,8 @@ public class UserServiceImpl extends GenericServiceImpl<User> implements UserSer
 
     @Override
     public User activateNewEmail(ActivateUserDTO activateUser) throws SparkPostException, ActivationException {
-        User user = userRepository.findByUsername(activateUser.getUsername()).orElseThrow();
+        User user = userRepository.findByUsername(activateUser.getUsername())
+                .orElseThrow(() -> new EntityNotFoundException("This username does not exist"));
         LocalDateTime now = LocalDateTime.now();
 
         if (activateUser.getActivationCode().equalsIgnoreCase(user.getNewEmailCode()) && 

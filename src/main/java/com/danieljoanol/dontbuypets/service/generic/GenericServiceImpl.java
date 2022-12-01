@@ -5,6 +5,10 @@ import java.util.List;
 
 import javax.persistence.EntityNotFoundException;
 
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+
 import com.danieljoanol.dontbuypets.entity.GenericEntity;
 import com.danieljoanol.dontbuypets.repository.GenericRepository;
 
@@ -16,8 +20,9 @@ public abstract class GenericServiceImpl<T extends GenericEntity<T>> {
         this.repository = repository;
     }
 
-    public List<T> getAll() {
-        return repository.findAll();
+    public Page<T> getAll(Integer pageNumber, Integer pageSize) {
+        Pageable pageable = PageRequest.of(pageNumber, pageSize);
+        return repository.findAll(pageable);
     }
 
     public T get(Long id) {

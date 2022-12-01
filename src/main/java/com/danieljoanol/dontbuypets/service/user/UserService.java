@@ -18,7 +18,7 @@ public interface UserService extends GenericService<User> {
     String addImage(Long id, MultipartFile image)
             throws EmptyImageException, InvalidImageFormatException, IOException;
 
-    String createUser(User entity) throws DuplicatedUserDataException, SparkPostException;
+    String createUser(User entity) throws DuplicatedUserDataException, SparkPostException, Exception;
 
     User activateUser(ActivateUserDTO activateUser) throws SparkPostException, ActivationException;
 

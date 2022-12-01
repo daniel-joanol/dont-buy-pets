@@ -24,9 +24,8 @@ import lombok.extern.slf4j.Slf4j;
 @ResponseBody
 public class ExceptionHandlerController {
 
-    @ExceptionHandler(value = { EntityNotFoundException.class, NoSuchElementException.class,
-            DuplicatedUserDataException.class,
-            ActivationException.class })
+    @ExceptionHandler(value = { EntityNotFoundException.class, 
+            DuplicatedUserDataException.class,  ActivationException.class })
     @ResponseBody
     @ResponseStatus(HttpStatus.BAD_REQUEST)
     public ResponseEntity<Object> handleEntityNotFoundEx(
@@ -48,6 +47,16 @@ public class ExceptionHandlerController {
         messageArr = messageArr[messageArr.length -1].split("]");
         response.setMessage(messageArr[0]);
         return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(response);
+    }
+
+    @ExceptionHandler(Exception.class)
+    @ResponseBody
+    @ResponseStatus(HttpStatus.INTERNAL_SERVER_ERROR)
+    public ResponseEntity<Object> handlEx(
+            HttpServletRequest request, Exception ex) {
+
+        ErrorResponse response = getErrorResponse(ex);
+        return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(response);
     }
 
     private ErrorResponse getErrorResponse(Exception exception) {
