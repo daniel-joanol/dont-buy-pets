@@ -4,6 +4,7 @@ import java.util.List;
 
 import javax.validation.Valid;
 
+import org.springframework.data.domain.Page;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -38,9 +39,9 @@ public abstract class GenericController<T extends GenericEntity<T>, U extends Ge
     @ApiResponses(value = { //
             @ApiResponse(code = 200, message = "SUCCESS"), @ApiResponse(code = 500, message = "System error") })
     @GetMapping("/")
-    public ResponseEntity<List<U>> getAll() {
-        List<T> entities = service.getAll();
-        List<U> vos = this.assembler.convertToDTO(entities);
+    public ResponseEntity<Page<U>> getAll(Integer pageNumber, Integer pageSize) {
+        Page<T> entities = service.getAll(pageNumber, pageSize);
+        Page<U> vos = this.assembler.convertToDTO(entities);
         return ResponseEntity.ok(vos);
     }
 

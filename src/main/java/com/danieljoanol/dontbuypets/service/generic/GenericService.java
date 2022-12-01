@@ -2,9 +2,11 @@ package com.danieljoanol.dontbuypets.service.generic;
 
 import java.util.List;
 
+import org.springframework.data.domain.Page;
+
 public interface GenericService<T> {
     
-    public List<T> getAll();
+    public Page<T> getAll(Integer pageNumber, Integer pageSize);
 
     public T get(Long id);
 

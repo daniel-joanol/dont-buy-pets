@@ -8,11 +8,11 @@ import com.danieljoanol.dontbuypets.entity.User;
 
 @Repository
 public interface UserRepository extends GenericRepository<User> {
-    //TODO: implement pagination on repositories
 
     Boolean existsByEmail(String email);
 
     Boolean existsByUsername(String username);
 
     Optional<User> findByUsername(String username);
+
 }
